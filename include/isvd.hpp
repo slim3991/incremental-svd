@@ -1,6 +1,7 @@
-#include "../extern/Eigen/Dense"
-#include "../extern/Eigen/QR"
-#include "../extern/Eigen/SVD"
+#pragma once
+#include "Eigen/Dense"
+#include "Eigen/QR"
+#include "Eigen/SVD"
 
 class IncrementalSVD {
 public:
@@ -55,7 +56,7 @@ public:
 
 private:
   void re_orth() {
-    Eigen::FullPivHouseholderQR<Eigen::MatrixXd> qr(U);
-    U = qr.matrixQ();
+    Eigen::HouseholderQR<Eigen::MatrixXd> qr(U);
+    U = qr.householderQ() * Eigen::MatrixXd::Identity(U.rows(), U.cols());
   }
 };

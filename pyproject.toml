@@ -1,3 +1,7 @@
+[build-system]
+requires = ["scikit-build-core", "pybind11", "eigen"]
+build-backend = "scikit_build_core.build"
+
 [project]
 name = "incremental-svd"
 version = "0.1.0"
@@ -6,4 +10,6 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "numpy>=2.4.4",
+    "pybind11>=3.0.4",
+    "setuptools>=82.0.1",
 ]
