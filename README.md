@@ -43,15 +43,9 @@ S = isvd.S  # Singular values (Rank x Rank)
 ```
 
 ## Methods
-```python 
-fit()``` 
-Initializes the U and S matrices using a standard SVD.
+```fit()``` Initializes the U and S matrices using a standard SVD.
 
-```python
-Increment()``` 
-Updates the current decomposition with a new sample or a batch of samples
+```Increment()``` Updates the current decomposition with a new sample or a batch of samples
 
-```python
-_reoth()``` 
-Internal method that perfroms a QR based re-orthogonalization.
+```_reoth()``` Internal method that perfroms a QR based re-orthogonalization.
 
