@@ -203,6 +203,7 @@ set(PYBIND11_HEADERS
     include/pybind11/buffer_info.h
     include/pybind11/cast.h
     include/pybind11/chrono.h
+    include/pybind11/common.h
     include/pybind11/complex.h
     include/pybind11/conduit/pybind11_conduit_v1.h
     include/pybind11/conduit/pybind11_platform_abi_id.h

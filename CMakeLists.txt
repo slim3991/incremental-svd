@@ -1,16 +1,21 @@
 cmake_minimum_required(VERSION 3.15)
 project(isvd_project LANGUAGES CXX)
 
-# Instead of add_subdirectory, find the version installed via pip
-find_package(pybind11 CONFIG REQUIRED)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Setup Eigen (Keep this as you have it)
-set(EIGEN3_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/extern/Eigen")
+# 1. Subdirectories
+add_subdirectory(extern/pybind11)
 
-# Define the module
+# 2. Define the module
 pybind11_add_module(incremental_svd_lib src/wrapper.cpp)
 
+# 3. Include paths
 target_include_directories(incremental_svd_lib PRIVATE 
-    include 
-    extern
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern # Point directly to Eigen
 )
+
+# 4. Install rule
+# This will move the .so file from /build into the /isvd folder
+install(TARGETS incremental_svd_lib DESTINATION .)
