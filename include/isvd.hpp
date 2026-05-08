@@ -1,24 +1,28 @@
 #pragma once
+#include "Eigen/Core"
 #include "Eigen/Dense"
 #include "Eigen/QR"
 #include "Eigen/SVD"
 
-class IncrementalSVD {
+template <typename scalar> class IncrementalSVD {
+  typedef Eigen::Matrix<scalar, Eigen::Dynamic, Eigen::Dynamic> EigMatrix;
+  typedef Eigen::Vector<scalar, Eigen::Dynamic> EigVector;
+
 public:
-  Eigen::MatrixXd U;
-  Eigen::VectorXd S;
+  EigMatrix U;
+  EigVector S;
 
 private:
   bool is_fitted = false;
   int rank;
-  float f; // forgetting factor
+  scalar f; // forgetting factor
   int time_since_reorth = 0;
 
 public:
-  IncrementalSVD(int r, float ff = 1.0) : rank{r}, f{ff} {}
+  IncrementalSVD(int r, scalar ff = 1.0) : rank{r}, f{ff} {}
 
-  void fit(Eigen::MatrixXd X) {
-    Eigen::BDCSVD<Eigen::MatrixXd> svd(X, Eigen::ComputeThinU);
+  void fit(EigMatrix X) {
+    Eigen::BDCSVD<EigMatrix> svd(X, Eigen::ComputeThinU);
     int current_rank =
         std::min(rank, static_cast<int>(svd.singularValues().size()));
 
@@ -27,22 +31,22 @@ public:
     is_fitted = true;
   }
 
-  void increment(Eigen::VectorXd new_vec) {
-    Eigen::VectorXd m = U.transpose() * new_vec;
-    Eigen::VectorXd p = new_vec - (U * m);
-    double p_norm = p.norm();
+  void increment(EigVector new_vec) {
+    EigVector m = U.transpose() * new_vec;
+    EigVector p = new_vec - (U * m);
+    scalar p_norm = p.norm();
 
     if (p_norm > 1e-10) {
-      Eigen::VectorXd q = p / p_norm;
+      EigVector q = p / p_norm;
 
-      Eigen::MatrixXd K = Eigen::MatrixXd::Zero(S.size() + 1, S.size() + 1);
+      EigMatrix K = EigMatrix::Zero(S.size() + 1, S.size() + 1);
       K.block(0, 0, S.size(), S.size()) = (S * f).asDiagonal();
       K.block(0, S.size(), S.size(), 1) = m;
       K(S.size(), S.size()) = p_norm;
 
-      Eigen::JacobiSVD<Eigen::MatrixXd> svd(K, Eigen::ComputeFullU);
+      Eigen::JacobiSVD<EigMatrix> svd(K, Eigen::ComputeFullU);
 
-      Eigen::MatrixXd combined_U = Eigen::MatrixXd(U.rows(), U.cols() + 1);
+      EigMatrix combined_U = EigMatrix(U.rows(), U.cols() + 1);
       combined_U << U, q;
       U = (combined_U * svd.matrixU().leftCols(rank));
       S = svd.singularValues().head(rank);
@@ -56,7 +60,7 @@ public:
 
 private:
   void re_orth() {
-    Eigen::HouseholderQR<Eigen::MatrixXd> qr(U);
-    U = qr.householderQ() * Eigen::MatrixXd::Identity(U.rows(), U.cols());
+    Eigen::HouseholderQR<EigMatrix> qr(U);
+    U = qr.householderQ() * EigMatrix::Identity(U.rows(), U.cols());
   }
 };

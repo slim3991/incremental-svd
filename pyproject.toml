@@ -1,20 +1,27 @@
 [build-system]
-requires = ["scikit-build-core", "pybind11"]
+requires = [
+    "scikit-build-core>=0.10",
+    "pybind11>=2.12"
+]
 build-backend = "scikit_build_core.build"
 
 [project]
 name = "incremental-svd"
 version = "0.1.0"
-description = "Add your description here"
+description = "Incremental SVD with C++ backend"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
+
 dependencies = [
-    "numpy>=2.4.4",
-    "pybind11>=3.0.4",
-    "pytest>=9.0.3",
+    "numpy>=2.0"
 ]
 
 [tool.scikit-build]
-# This tells CMake to put the .so file inside the isvd folder
+build-dir = "build/{wheel_tag}"
+
+wheel.packages = ["src/isvd"]
+
 cmake.build-type = "Release"
-wheel.install-dir = "isvd" 
+
+editable.mode = "redirect"
+editable.rebuild = true
