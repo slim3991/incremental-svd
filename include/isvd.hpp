@@ -47,17 +47,10 @@ public:
       combined_U << U, q;
       U = (combined_U * svd.matrixU().leftCols(rank));
       S = svd.singularValues().head(rank);
-    }
 
-    if (++time_since_reorth >= 1) {
-      re_orth();
-      time_since_reorth = 0;
+      // re-orthogonalize
+      Eigen::HouseholderQR<EigMatrix> qr(U);
+      U = qr.householderQ() * EigMatrix::Identity(U.rows(), U.cols());
     }
-  }
-
-private:
-  void re_orth() {
-    Eigen::HouseholderQR<EigMatrix> qr(U);
-    U = qr.householderQ() * EigMatrix::Identity(U.rows(), U.cols());
   }
 };
