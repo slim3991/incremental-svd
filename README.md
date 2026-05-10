@@ -16,7 +16,6 @@ chucks and added bit by bit to the decomposition.
 * **Low Memory Footprint:** Updates the decomposition without needing to re-process the entire historical dataset.
 * **Rank-Truncation:** Maintains a fixed rank $k$ to ensure computational efficiency and noise reduction.
 * **Forgetting Factor:** Includes a configurable parameter $f \in (0, 1]$ to weight recent data more heavily—ideal for non-stationary data streams.n
-* **Stability:** Built-in periodic re-orthogonalization to combat numerical drift in the basis vectors.
 
 ---
 ## Quick Start
