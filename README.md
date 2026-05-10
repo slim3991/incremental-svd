@@ -212,15 +212,6 @@ The Python bindings are implemented with `pybind11`.
 
 ---
 
-## Current Limitations
-
-- Incremental updates currently accept a single vector at a time
-- Only the left singular vectors (`U`) and singular values (`S`) are maintained
-- Right singular vectors (`V`) are not tracked
-- No automatic rank adaptation
-
----
-
 ## Future Improvements
 
 Potential future additions:
