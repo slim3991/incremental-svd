@@ -23,11 +23,8 @@ public:
 
   void fit(EigMatrix X) {
     Eigen::BDCSVD<EigMatrix> svd(X, Eigen::ComputeThinU);
-    int current_rank =
-        std::min(rank, static_cast<int>(svd.singularValues().size()));
-
-    U = svd.matrixU();
-    S = svd.singularValues().head(current_rank);
+    U = svd.matrixU().leftCols(rank);
+    S = svd.singularValues().head(rank);
     is_fitted = true;
   }
 
@@ -52,7 +49,7 @@ public:
       S = svd.singularValues().head(rank);
     }
 
-    if (++time_since_reorth >= 10) {
+    if (++time_since_reorth >= 1) {
       re_orth();
       time_since_reorth = 0;
     }

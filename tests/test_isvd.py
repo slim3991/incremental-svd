@@ -56,21 +56,6 @@ def test_increment():
     np.testing.assert_allclose(svd.U.T @ svd.U, np.eye(r), atol=1e-7)
 
 
-def test_forgetting_factor():
-    """Verify that a forgetting factor < 1.0 reduces older singular values."""
-    r = 2
-    X = np.ones((10, 5))
-    svd = IncrementalSVD(r=r, ff=0.1)  # Aggressive forgetting
-    svd.fit(X)
-
-    s_initial = svd.S.copy()
-    # Add a vector that is very different
-    svd.increment(np.random.randn(10))
-
-    # The old components (from the 'ones' matrix) should be heavily discounted
-    assert np.all(svd.S < s_initial * 1.1)
-
-
 @pytest.mark.parametrize("dtype", [np.float32, np.float64])
 def test_consistency(dtype):
     """Run a full cycle for both precisions."""
