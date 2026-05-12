@@ -53,4 +53,14 @@ public:
       U = qr.householderQ() * EigMatrix::Identity(U.rows(), U.cols());
     }
   }
+
+  // Bathed incrementer
+  void increment(EigMatrix new_mat) {
+    for (int i = 0; i < new_mat.cols(); ++i) {
+      // copy was necessary here due to Eigen wierdness, bottlenneck is 
+      // svd so this is fine.
+      EigVector col_vec = new_mat.col(i);
+      this->increment(col_vec);
+    }
+  }
 };

@@ -1,10 +1,8 @@
 import numpy as np
 
 try:
-    # Look for the compiled binary in the current directory
     from isvd.incremental_svd_lib import IncrementalSVD_F, IncrementalSVD_D
 except ImportError:
-    # This helps debug where Python is actually looking
     import os
 
     print(
@@ -35,10 +33,10 @@ class IncrementalSVD:
             self._init_instance(X)
         return self._instance.fit(X)
 
-    def increment(self, new_vec):
+    def increment(self, data):
         if self._instance is None:
-            self._init_instance(new_vec)
-        return self._instance.increment(new_vec)
+            self._init_instance(data)
+        return self._instance.increment(data)
 
     @property
     def U(self):

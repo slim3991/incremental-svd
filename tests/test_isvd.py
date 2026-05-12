@@ -56,6 +56,51 @@ def test_increment():
     np.testing.assert_allclose(svd.U.T @ svd.U, np.eye(r), atol=1e-7)
 
 
+def test_batch_increment_equivalence():
+    """
+    Verify that passing a matrix of 3 columns results in the
+    same state as calling increment 3 times individually.
+    """
+    r = 4
+    rows, cols = 30, 3
+    X_init = np.random.randn(rows, 10)
+    batch_data = np.random.randn(rows, cols)
+
+    # 1. Instance for individual increments
+    svd_single = IncrementalSVD(r=r)
+    svd_single.fit(X_init)
+    for i in range(cols):
+        svd_single.increment(batch_data[:, i])
+
+    # 2. Instance for batch increment
+    svd_batch = IncrementalSVD(r=r)
+    svd_batch.fit(X_init)
+    svd_batch.increment(batch_data)
+
+    # Assert S and U are identical (within numerical precision)
+    np.testing.assert_allclose(svd_single.S, svd_batch.S, atol=1e-7)
+    np.testing.assert_allclose(
+        np.abs(svd_single.U),
+        np.abs(svd_batch.U),
+        atol=1e-7,
+    )
+
+
+def test_batch_increment_orthogonality():
+    """Verify that a large batch update preserves U's orthogonality."""
+    r = 8
+    rows = 100
+    svd = IncrementalSVD(r=r)
+    svd.fit(np.random.randn(rows, 20))
+
+    # Large batch
+    batch = np.random.randn(rows, 50)
+    svd.increment(batch)
+
+    identity_approx = svd.U.T @ svd.U
+    np.testing.assert_allclose(identity_approx, np.eye(r), atol=1e-7)
+
+
 @pytest.mark.parametrize("dtype", [np.float32, np.float64])
 def test_consistency(dtype):
     """Run a full cycle for both precisions."""
