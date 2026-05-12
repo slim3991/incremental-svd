@@ -14,17 +14,14 @@ Instead of rebuilding the decomposition from scratch, the model updates the low-
 
 ## Features
 
-- **Incremental updates** using Brand’s SVD update algorithm
-- **Low memory usage** for large datasets and streaming data
-- **Fixed-rank truncation** to maintain computational efficiency
-- **Forgetting factor** support for non-stationary data streams
-- **C++ performance** with Eigen linear algebra routines
-- **Python-friendly API** with NumPy interoperability
-- Supports both:
-  - `float32`
-  - `float64`
-
----
+- **Incremental updates** using Brand’s SVD update algorithm.
+- **Batched increments** for processing multiple observations efficiently in a single call.
+- **Low memory usage** for large datasets and streaming data.
+- **Fixed-rank truncation** to maintain computational efficiency.
+- **Forgetting factor** support for non-stationary data streams.
+- **C++ performance** with Eigen linear algebra routines and explicit vector evaluation for numerical consistency.
+- **Python-friendly API** with NumPy interoperability.
+- Supports both `float32` and `float64`.---
 
 ## Installation
 
@@ -216,7 +213,6 @@ The Python bindings are implemented with `pybind11`.
 
 Potential future additions:
 
-- Batched incremental updates
 - Adaptive rank selection
 - Sparse matrix support
 - GPU acceleration
